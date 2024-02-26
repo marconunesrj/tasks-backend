@@ -1,3 +1,5 @@
+	// OBS: Para ajudar a usar a linguagem Groovy, entre no Pipeline do Projeto, Procurar por "Pipeline" e clique em "Pipeline Syntax"
+	// 	Ex: http://localhost:8008/job/PipelineBack/pipeline-syntax/
 pipeline {
     agent any
     stages {
@@ -37,6 +39,12 @@ pipeline {
         stage ('Deploy Backend') {
             steps {
                 deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8001/')], contextPath: 'tasks-backend', war: 'target/tasks-backend.war'
+            }
+        }
+        stage ('API Test') {
+            steps {
+                git branch: 'main', credentialsId: 'GithubLogin', url: 'https://github.com/marconunesrj/api-test'
+                bat 'mvn test'
             }
         }
     }
