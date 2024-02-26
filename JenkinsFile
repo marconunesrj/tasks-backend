@@ -11,5 +11,35 @@ pipeline {
                 bat 'mvn test'
             }
         }
+        // stage ('Sonar Analysis') {
+        //     environment {
+        //         // Procure em-> Painel de Controle -> Gerenciar Jenkins -> Ferramenta de configuração global -> 
+        //         //   Procurar "SonarQube Scanner" e veja o nome da variável criada para ele. Ex: SONAR_SCANNER
+        //         scannerHome = tool 'SONAR_SCANNER'
+        //     }
+        //     steps {
+
+        //         // Procure em-> Painel de Controle -> Gerenciar Jenkins -> Configurar Sistema -> Procurar "SonarQube servers" e veja o nome da variável criada para ele. Ex: SONARQUBE_LOCAL
+        //         withSonarQubeEnv('SONARQUBE_LOCAL') {
+        //             bat "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=DeployBack -Dsonar.host.url=http://localhost:9000 -Dsonar.login=ac3d04f5dd982d1a6514cc8c7038fe02d85f0e67 -Dsonar.java.binaries=target -Dsonar.coverage.exclusions=**/.mvn/**,**/src/test/**,**/model/**,**Application.java "
+        //         }
+
+        //     }
+        // }
+        // stage ('Quality Gate') {
+        //     steps {
+        //         sleep(20)
+        //         timeout(time: 1, unit:'MINUTES') {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        // }
+        stage ('Deploy Backend') {
+            steps {
+                deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8001/')], contextPath: 'tasks-backend', war: 'target/tasks-backend.war'
+            }
+        }
     }
 }
+// -Dsonar.login=1483e23e606001714eb56b9875ec95567c2cc5a1  (Notebook-Marco)
+// -Dsonar.login=ac3d04f5dd982d1a6514cc8c7038fe02d85f0e67 (Desktop-Marco)		
