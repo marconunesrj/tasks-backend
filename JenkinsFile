@@ -58,6 +58,14 @@ pipeline {
                 }
             }
         }
+        stage ('Functional Test') {
+            steps {
+                dir('functional-test') {  
+                    git branch: 'main', credentialsId: 'GithubLogin', url: 'https://github.com/marconunesrj/functional-test'
+                    bat 'mvn test'
+                }
+            }
+        }
     }
 }
 // -Dsonar.login=1483e23e606001714eb56b9875ec95567c2cc5a1  (Notebook-Marco)
