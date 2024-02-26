@@ -85,9 +85,9 @@ pipeline {
         always {
             junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml, api-test/target/surefire-reports/*.xml, , functional-test/target/surefire-reports/*.xml, , functional-test/target/failsafe-reports/*.xml'
             // TODO: Criar uma copia do arquivo .war com o _build_$BUILD_NUMBER para ser salvo
-            bat 'copy target/tasks-backend.war target/tasks-backend_build_${BUILD_NUMBER}.war'
-            bat 'copy frontend/target/tasks_build.war frontend/target/tasks_build_${BUILD_NUMBER}.war'
-            archiveArtifacts artifacts: 'target/tasks-backend_build_${BUILD_NUMBER}.war, frontend/target/tasks_build_${BUILD_NUMBER}.war', followSymlinks: false, onlyIfSuccessful: true
+            bat """copy target/tasks-backend.war target/tasks-backend_build_${BUILD_NUMBER}.war"""
+            bat """copy frontend/target/tasks_build.war frontend/target/tasks_build_${BUILD_NUMBER}.war"""
+            archiveArtifacts artifacts: """target/tasks-backend_build_${BUILD_NUMBER}.war, frontend/target/tasks_build_${BUILD_NUMBER}.war""", followSymlinks: false, onlyIfSuccessful: true
         }
         unsuccessful {
             emailext attachLog: true, body: 'See the attached log below', subject: 'Build $BUILD_NUMBER has failed', to: 'marconunes.rj+jenkins@gmail.com'
