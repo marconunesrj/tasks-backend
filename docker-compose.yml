@@ -1,0 +1,63 @@
+version: "3"
+services:
+  db:
+    container_name: pg-prod
+    image: postgres:9.6
+    networks:
+      - prod_net_back
+    environment:
+      - POSTGRES_PASSWORD=passwd
+      - POSTGRES_DB=tasks
+      - POSTGRES_INITDB_ARGS='--encoding=UTF-8'    # --lc-collate=C --lc-ctype=C'
+    volumes:
+      - prod_postgresql:/var/lib/postgresql
+      - prod_postgresql_data:/var/lib/postgresql/data
+
+  backend:
+    container_name: backend-prod
+    image: back_prod:build_${BUILD_NUMBER}   # Versionando a imagem de Produção. BUILD_NUMBER -> vem do ambiente do Jenkins (É o número da construção da tarefa no jenkins)
+    build:
+      context: .  # Pegando o arquivo Dockerfile do diretório corrente (do mesmo diretório do arquivo docker-compose.yml)
+      args:
+        - WAR_FILE=target/tasks-backend.war
+        - CONTEXT=tasks-backend
+    networks:
+      - prod_net_back    # O backend está registrado nas duas redes existentes, boa prática para Segurança
+      - prod_net_front
+    #ports:
+    #  - 9998:8080      # Só utilizado caso deseje expor a sua API para terceiros ou testes em produção (Isto é perigoso) 
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWD=passwd
+      #- DATABASE_UPDATE=none
+    depends_on:
+      - db
+
+  frontend:
+    container_name: frontend-prod
+    image: front_prod:build_${BUILD_NUMBER}   # Versionando a imagem de Produção
+    build:
+        context: .
+        args:
+          - WAR_FILE=frontend/target/tasks.war
+          - CONTEXT=tasks
+    networks:
+      - prod_net_front
+    ports:
+      - 9999:8080
+    environment:
+      - BACKEND_HOST=backend
+      - BACKEND_PORT=8080
+      - APP_VERSION=build_${BUILD_NUMBER}   # Versionamento de Produção
+    #depends_on:
+    #  - backend
+
+networks:
+  prod_net_front:
+  prod_net_back:
+
+volumes:
+  prod_postgresql:
+  prod_postgresql_data:
