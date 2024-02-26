@@ -84,14 +84,14 @@ pipeline {
     post {
         always {
             junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml, api-test/target/surefire-reports/*.xml, , functional-test/target/surefire-reports/*.xml, , functional-test/target/failsafe-reports/*.xml'
-            dir('builds') {  
-                // TODO: Criar uma copia do arquivo .war com o _build_$BUILD_NUMBER para ser salvo
-                // https://learn.microsoft.com/pt-br/windows-server/administration/windows-commands/copy
-                bat """ copy /y ../target/tasks-backend.war tasks-backend_build_${BUILD_NUMBER}.war"""
-                bat """ copy /y  ../frontend/target/tasks_build.war tasks_build_${BUILD_NUMBER}.war"""
-            }
-            archiveArtifacts artifacts: """builds/tasks-backend_build_${BUILD_NUMBER}.war, builds/tasks_build_${BUILD_NUMBER}.war""", followSymlinks: false, onlyIfSuccessful: true
-            // archiveArtifacts artifacts: """target/tasks-backend.war, frontend/target/tasks.war""", followSymlinks: false, onlyIfSuccessful: true
+            // dir('builds') {  
+            //     // TODO: Criar uma copia do arquivo .war com o _build_$BUILD_NUMBER para ser salvo
+            //     // https://learn.microsoft.com/pt-br/windows-server/administration/windows-commands/copy
+            //     bat """ copy /y ../target/tasks-backend.war tasks-backend_build_${BUILD_NUMBER}.war"""
+            //     bat """ copy /y  ../frontend/target/tasks_build.war tasks_build_${BUILD_NUMBER}.war"""
+            // }
+            // archiveArtifacts artifacts: """builds/tasks-backend_build_${BUILD_NUMBER}.war, builds/tasks_build_${BUILD_NUMBER}.war""", followSymlinks: false, onlyIfSuccessful: true
+            archiveArtifacts artifacts: """target/tasks-backend.war, frontend/target/tasks.war""", followSymlinks: false, onlyIfSuccessful: true
         }
         unsuccessful {
             emailext attachLog: true, body: 'See the attached log below', subject: 'Build $BUILD_NUMBER has failed', to: 'marconunes.rj+jenkins@gmail.com'
