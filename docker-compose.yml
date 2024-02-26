@@ -31,7 +31,7 @@ services:
       - DATABASE_PORT=5432
       - DATABASE_USER=postgres
       - DATABASE_PASSWD=passwd
-      #- DATABASE_UPDATE=none
+      - DATABASE_UPDATE=none    # Não atualiza o banco e então mantém os dados persistidos
     depends_on:
       - db
 
