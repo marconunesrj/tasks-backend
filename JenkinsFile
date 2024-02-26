@@ -81,6 +81,11 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml, api-test/target/surefire-reports/*.xml, , functional-test/target/surefire-reports/*.xml, , functional-test/target/failsafe-reports/*.xml'
+        }
+    }
 }
 // -Dsonar.login=1483e23e606001714eb56b9875ec95567c2cc5a1  (Notebook-Marco)
 // -Dsonar.login=ac3d04f5dd982d1a6514cc8c7038fe02d85f0e67 (Desktop-Marco)		
