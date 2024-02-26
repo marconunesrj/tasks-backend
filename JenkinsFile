@@ -72,6 +72,14 @@ pipeline {
                 bat 'docker-compose up -d'
             }
         }
+        stage ('Health Check') {
+            steps {
+                dir('functional-test') {  
+                    sleep(10)  // Ajustar o tempo de acordo com a máquina onde for ser executado 
+                    bat 'mvn verify -Dskip.surefire.tests'
+                }
+            }
+        }
     }
 }
 // -Dsonar.login=1483e23e606001714eb56b9875ec95567c2cc5a1  (Notebook-Marco)
