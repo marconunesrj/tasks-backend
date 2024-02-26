@@ -44,7 +44,7 @@ pipeline {
         stage ('API Test') {
             steps {
                 git branch: 'main', credentialsId: 'GithubLogin', url: 'https://github.com/marconunesrj/api-test'
-                bat 'mvn test'
+                bat 'mvn clean test'
             }
         }
     }
